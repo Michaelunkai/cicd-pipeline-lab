@@ -1,0 +1,59 @@
+{
+  "name": "taskflow",
+  "secrets": ["TASKFLOW_DEPLOY_TOKEN"],
+  "stages": [
+    {
+      "id": "lint",
+      "name": "Lint",
+      "run": "node tools/lint.mjs",
+      "needs": []
+    },
+    {
+      "id": "test",
+      "name": "Unit tests",
+      "run": "node --test app/test/taskflow.test.js",
+      "needs": []
+    },
+    {
+      "id": "build",
+      "name": "Build",
+      "run": "node tools/build.mjs",
+      "needs": ["lint", "test"],
+      "artifacts": ["dist/"]
+    },
+    {
+      "id": "scan",
+      "name": "Security scan",
+      "run": "node tools/scan.mjs",
+      "needs": ["build"],
+      "retries": 0
+    },
+    {
+      "id": "package",
+      "name": "Package",
+      "run": "node tools/package.mjs",
+      "needs": ["build", "scan"],
+      "artifacts": ["artifacts/*.zip"]
+    },
+    {
+      "id": "deploy-dev",
+      "name": "Deploy dev",
+      "run": "node tools/deploy.mjs dev",
+      "needs": ["package"]
+    },
+    {
+      "id": "deploy-staging",
+      "name": "Deploy staging",
+      "run": "node tools/deploy.mjs staging",
+      "needs": ["deploy-dev"],
+      "approval": true
+    },
+    {
+      "id": "deploy-prod",
+      "name": "Deploy prod",
+      "run": "node tools/deploy.mjs prod",
+      "needs": ["deploy-staging"],
+      "approval": true
+    }
+  ]
+}

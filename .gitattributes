@@ -1,0 +1,6 @@
+# Consistent line endings everywhere: LF in the repo and the working copy,
+# except Windows batch files which must stay CRLF to double-click cleanly.
+* text=auto eol=lf
+*.cmd text eol=crlf
+*.png binary
+*.zip binary

@@ -1,0 +1,12 @@
+{
+  "name": "taskflow",
+  "version": "1.0.0",
+  "description": "Tiny in-memory task store — the sample app shipped by the cicd-pipeline-lab pipeline",
+  "type": "module",
+  "main": "src/taskflow.mjs",
+  "bundleExports": ["createTaskStore", "addTask", "completeTask", "listTasks", "stats", "nextAction"],
+  "scripts": {
+    "test": "node --test test/taskflow.test.js"
+  },
+  "license": "MIT"
+}

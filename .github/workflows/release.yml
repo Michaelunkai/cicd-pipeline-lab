@@ -1,0 +1,28 @@
+# Release — on a version tag, run the pipeline and attach the packaged
+# artifact to a GitHub Release. Tagging is the human's approval gate.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Pipeline through Package
+        run: node pipeline.mjs lint test build scan package --yes
+
+      - name: Create GitHub Release with the artifact
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*.zip
+          generate_release_notes: true

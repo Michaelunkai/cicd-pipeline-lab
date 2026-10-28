@@ -1,0 +1,16 @@
+# Pipeline runtime state (regenerated on every run — like a CI server's workspace)
+.pipeline/
+artifacts/
+dist/
+
+# Deployed environment contents (produced by deploy stages)
+environments/*/app/
+environments/*/manifest.json
+environments/*/history.json
+
+# Node
+node_modules/
+
+# OS noise
+Thumbs.db
+.DS_Store

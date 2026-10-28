@@ -1,0 +1,33 @@
+# CI — the same pipeline that runs locally, running for real on every push.
+# Compare this file with pipeline.json: same stages, same gates, different runner.
+# deploy-staging / deploy-prod are deliberately NOT run here — in a real system
+# they live in a separate workflow bound to protected GitHub environments.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Engine self-tests
+        run: node --test engine-tests/
+
+      - name: Pipeline (lint, test, build, scan, package, deploy-dev)
+        run: node pipeline.mjs lint test build scan package deploy-dev --yes
+
+      - name: Upload packaged artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: taskflow-package
+          path: artifacts/*.zip
+          if-no-files-found: error
