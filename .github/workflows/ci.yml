@@ -8,6 +8,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   pipeline:
@@ -31,5 +32,3 @@ jobs:
           name: taskflow-package
           path: artifacts/*.zip
           if-no-files-found: error
-
-# re-registered
